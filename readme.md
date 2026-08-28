@@ -1,3 +1,8 @@
+# Move repositories notice
+Unfortunately this package cannot be maintained at this location anymore due to broken CI integrations, and travis-ci likely can't be used much longer either due to their change to paid plans. This project is still being actively maintained, we ask you to please switch to the following repository: https://github.com/api-ecosystem-for-laravel/dingo-api
+
+---
+
 ![](https://cloud.githubusercontent.com/assets/829059/9216039/82be51cc-40f6-11e5-88f5-f0cbd07bcc39.png)
 
 The Dingo API package is meant to provide you, the developer, with a set of tools to help you easily and quickly build your own API. While the goal of this package is to remain as flexible as possible it still won't cover all situations and solve all problems.
@@ -27,11 +32,11 @@ Please refer to our extensive [Wiki documentation](https://github.com/dingo/api/
 
 ## API Boilerplate
 
-If you are looking to start a new project from scratch, consider using the [Laravel 5 API Boilerplate](https://github.com/specialtactics/laravel5-api-boilerplate), which builds on top of the dingo-api package, and adds a lot of great features.
+If you are looking to start a new project from scratch, consider using the [Laravel API Boilerplate](https://github.com/specialtactics/laravel-api-boilerplate), which builds on top of the dingo-api package, and adds a lot of great features.
 
 ## Support
 
-For answers you may not find in the Wiki, avoid posting issues. Feel free to ask for support on the dedicated [Slack](https://larachat.slack.com/messages/api/) room. Make sure to mention **specialtactics** / **@jasonlewis** so he is notified.
+For answers you may not find in the Wiki, avoid posting issues. Feel free to ask for support on the dedicated [Slack](https://larachat.slack.com/messages/api/) room. Make sure to mention **specialtactics** so he is notified.
 
 ## License
 

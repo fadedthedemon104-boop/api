@@ -93,7 +93,7 @@ class Factory
      *
      * @return \Dingo\Api\Http\Response
      */
-    public function collection(Collection $collection, $transformer, $parameters = [], Closure $after = null)
+    public function collection(Collection $collection, $transformer = null, $parameters = [], Closure $after = null)
     {
         if ($collection->isEmpty()) {
             $class = get_class($collection);
@@ -106,7 +106,11 @@ class Factory
             $parameters = [];
         }
 
-        $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        if ($transformer !== null) {
+            $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        } else {
+            $binding = $this->transformer->getBinding($collection);
+        }
 
         return new Response($collection, 200, [], $binding);
     }
@@ -114,14 +118,14 @@ class Factory
     /**
      * Bind an item to a transformer and start building a response.
      *
-     * @param object                 $item
-     * @param string|callable|object $transformer
-     * @param array                  $parameters
-     * @param \Closure               $after
+     * @param object                         $item
+     * @param null|string|callable|object    $transformer
+     * @param array                          $parameters
+     * @param \Closure                       $after
      *
      * @return \Dingo\Api\Http\Response
      */
-    public function item($item, $transformer, $parameters = [], Closure $after = null)
+    public function item($item, $transformer = null, $parameters = [], Closure $after = null)
     {
         // Check for $item being null
         if (! is_null($item)) {
@@ -135,7 +139,11 @@ class Factory
             $parameters = [];
         }
 
-        $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        if ($transformer !== null) {
+            $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        } else {
+            $binding = $this->transformer->getBinding($item);
+        }
 
         return new Response($item, 200, [], $binding);
     }
@@ -176,13 +184,13 @@ class Factory
      * Bind a paginator to a transformer and start building a response.
      *
      * @param \Illuminate\Contracts\Pagination\Paginator $paginator
-     * @param string|callable|object                     $transformer
+     * @param null|string|callable|object                $transformer
      * @param array                                      $parameters
      * @param \Closure                                   $after
      *
      * @return \Dingo\Api\Http\Response
      */
-    public function paginator(Paginator $paginator, $transformer, array $parameters = [], Closure $after = null)
+    public function paginator(Paginator $paginator, $transformer = null, array $parameters = [], Closure $after = null)
     {
         if ($paginator->isEmpty()) {
             $class = get_class($paginator);
@@ -190,7 +198,11 @@ class Factory
             $class = get_class($paginator->first());
         }
 
-        $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        if ($transformer !== null) {
+            $binding = $this->transformer->register($class, $transformer, $parameters, $after);
+        } else {
+            $binding = $this->transformer->getBinding($paginator->first());
+        }
 
         return new Response($paginator, 200, [], $binding);
     }

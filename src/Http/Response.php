@@ -87,7 +87,7 @@ class Response extends IlluminateResponse
      */
     public static function makeFromExisting(IlluminateResponse $old)
     {
-        $new = static::create($old->getOriginalContent(), $old->getStatusCode());
+        $new = new static($old->getOriginalContent(), $old->getStatusCode());
 
         $new->headers = $old->headers;
 
@@ -112,7 +112,7 @@ class Response extends IlluminateResponse
             $content = json_decode($json->getContent(), true);
         }
 
-        $new = static::create($content, $json->getStatusCode());
+        $new = new static($content, $json->getStatusCode());
 
         $new->headers = $json->headers;
 
@@ -142,7 +142,11 @@ class Response extends IlluminateResponse
 
         $defaultContentType = $this->headers->get('Content-Type');
 
-        $this->headers->set('Content-Type', $formatter->getContentType());
+        // If we have no content, we don't want to set this header, as it will be blank
+        $contentType = $formatter->getContentType();
+        if (! empty($contentType)) {
+            $this->headers->set('Content-Type', $formatter->getContentType());
+        }
 
         $this->fireMorphedEvent();
 
@@ -153,7 +157,9 @@ class Response extends IlluminateResponse
         } elseif (is_array($this->content) || $this->content instanceof ArrayObject || $this->content instanceof Arrayable) {
             $this->content = $formatter->formatArray($this->content);
         } else {
-            $this->headers->set('Content-Type', $defaultContentType);
+            if (! empty($defaultContentType)) {
+                $this->headers->set('Content-Type', $defaultContentType);
+            }
         }
 
         return $this;
@@ -196,6 +202,12 @@ class Response extends IlluminateResponse
         // then we most likely have an object that cannot be type cast. In that
         // case we'll simply leave the content as null and set the original
         // content value and continue.
+        if (! empty($content) && is_object($content) && ! $this->shouldBeJson($content)) {
+            $this->original = $content;
+
+            return $this;
+        }
+
         try {
             return parent::setContent($content);
         } catch (UnexpectedValueException $exception) {
